@@ -1,0 +1,113 @@
+MDFloatLayout:
+    GridLayout:
+        id: top_container
+        padding: dp(8)
+        cols: 1
+        size_hint: 1, 1
+
+        MDLabel:
+            id: receiver_status
+            text: "Receiver Status"
+            font_style: "H6"
+            size_hint_y: None
+
+        ScrollView:
+            pos_hint: {'center_y': .5, 'center_x': .5}
+            size_hint: .9, .8
+
+            GridLayout:
+                id: container
+                padding: dp(8)
+                spacing: 10
+                cols: 3
+                row_force_default: True
+                row_default_height: 80
+                size_hint: 1, 0.9
+
+
+    MDFloatingActionButton:
+        icon: 'cloud-refresh'
+        on_release: app.update_receiver_status()
+        elevation_normal: 12
+        pos_hint: {'x': .8, 'y':.90}
+
+    MDFloatingActionButton:
+        icon: 'plus-thick'
+        on_release: app.show_task_dialog()
+        elevation_normal: 12
+        pos_hint: {'x': .1, 'y':.05}
+
+    MDFloatingActionButton:
+        icon: 'minus-thick'
+        on_release: app.start_delete_mode()
+        elevation_normal: 12
+        pos_hint: {'x': .3, 'y':.05}
+
+    MDFloatingActionButton:
+        icon: 'application-settings'
+        on_release: app.show_settings_dialog()
+        elevation_normal: 12
+        pos_hint: {'x': .8, 'y':.05}
+
+
+<AddActionDialogContent>:
+    orientation: "vertical"
+    spacing: "10dp"
+    size_hint: 1, None
+    height: "200dp"
+
+    GridLayout:
+        rows: 2
+
+        MDTextField:
+            id: label_text
+            write_tab: False
+            hint_text: "Button Label..."
+            pos_hint: {"center_y": .4}
+            max_text_length: 50
+
+        MDTextField:
+            id: action_text
+            write_tab: False
+            hint_text: "Denon Command..."
+            pos_hint: {"center_y": .4}
+            max_text_length: 50
+            on_text_validate: (app.add_action(label_text.text, action_text.text), app.close_dialog())
+
+    BoxLayout:
+        orientation: 'horizontal'
+
+        MDRaisedButton:
+            text: "SAVE"
+            on_release: (app.add_action(label_text.text, action_text.text), app.close_dialog())
+        MDFlatButton:
+            text: 'CANCEL'
+            on_release: app.close_dialog()
+
+
+<SettingsDialogContent>:
+    orientation: "vertical"
+    spacing: "10dp"
+    size_hint: 1, None
+    height: "200dp"
+
+    GridLayout:
+        rows: 1
+
+        MDTextField:
+            id: ip_text
+            write_tab: False
+            hint_text: "IP Address..."
+            pos_hint: {"center_y": .4}
+            max_text_length: 50
+            on_text_validate: (app.set_ip(ip_text.text), app.close_settings())
+
+    BoxLayout:
+        orientation: 'horizontal'
+
+        MDRaisedButton:
+            text: "SAVE"
+            on_release: (app.set_ip(ip_text.text), app.close_settings())
+        MDFlatButton:
+            text: 'CANCEL'
+            on_release: app.close_settings()
